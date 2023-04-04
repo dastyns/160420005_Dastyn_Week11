@@ -40,7 +40,7 @@ class StudentListAdapter(val studentList:ArrayList<Student>)
 //        holder.view.txtName.setText(studentList[position].name)
 
         holder.view.findViewById<Button>(R.id.btnDetail).setOnClickListener {
-            val action = StudentListFragmentDirections.actionStudentDetail()
+            val action = StudentListFragmentDirections.actionStudentDetail(studentList[position].id.toString())
             Navigation.findNavController(it).navigate(action)
         }
         var imageView = holder.view.findViewById<ImageView>(R.id.imageView)

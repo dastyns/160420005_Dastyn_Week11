@@ -5,16 +5,16 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
+import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.textfield.TextInputEditText
 import com.group.advweek4.R
+import com.group.advweek4.util.loadImage
 import com.group.advweek4.viewmodel.DetailViewModel
-import com.group.advweek4.viewmodel.ListViewModel
-import kotlinx.android.synthetic.main.fragment_student_list.*
 
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
@@ -22,12 +22,6 @@ private const val ARG_PARAM2 = "param2"
 
 class StudentDetailFragment : Fragment() {
     private lateinit var viewModel: DetailViewModel
-
-    fun observeViewModel(view:View) {
-        viewModel.studentLD.observe(viewLifecycleOwner, Observer {
-//            studentListAdapter.updateStudentList(it)
-        })
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -39,9 +33,24 @@ class StudentDetailFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProvider(this).get(DetailViewModel::class.java)
-        viewModel.fetch()
+
+        if(arguments != null){
+            val id = StudentDetailFragmentArgs.fromBundle(requireArguments()).id
+            viewModel = ViewModelProvider(this).get(DetailViewModel::class.java)
+            viewModel.fetch(id)
+        }
 
         observeViewModel(view)
+    }
+
+    fun observeViewModel(view:View) {
+        viewModel.studentLD.observe(viewLifecycleOwner, Observer {
+            view.findViewById<EditText>(R.id.txtID).setText(it.id)
+            view.findViewById<EditText>(R.id.txtName).setText(it.name)
+            view.findViewById<EditText>(R.id.txtBod).setText(it.bod)
+            view.findViewById<EditText>(R.id.txtPhone).setText(it.phone)
+            view.findViewById<ImageView>(R.id.imageView2).loadImage(it.photoUrl,
+                view.findViewById<ProgressBar>(R.id.progressBar2))
+        })
     }
 }
